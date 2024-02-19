@@ -1,4 +1,7 @@
 import React from "react";
+import worldIcon from "../assets/icons/world.png";
+import searchIcon from "../assets/icons/search.png";
+import moonIcon from "../assets/icons/moon.png";
 
 export default function Header() {
   return (
@@ -14,10 +17,16 @@ export default function Header() {
         <span>뉴스</span>
         <span>투자정보</span>
       </div>
-      <div className="w-44 flex justify-evenly">
-        <span>icon</span>
-        <span>icon</span>
-        <span>icon</span>
+      <div className=" w-36 flex justify-between">
+        <div>
+          <img className="w-6" src={searchIcon}></img>
+        </div>
+        <div>
+          <img className="w-6" src={worldIcon}></img>
+        </div>
+        <div>
+          <img className="w-6" src={moonIcon}></img>
+        </div>
       </div>
     </div>
   );
