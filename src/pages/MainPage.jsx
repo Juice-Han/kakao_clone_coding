@@ -6,53 +6,91 @@ import Footer from "../components/Footer";
 
 export default function MainPage() {
   const [headerBorderB, setHeaderBorderB] = useState(false);
-  const [headerDisappear, setHeaderDisappear] = useState(false);
+  const [headerAppear, setHeaderAppear] = useState(true);
+  const [subHeaderAppear, setSubHeaderAppear] = useState(false);
   const [throttle, setThrottle] = useState(false);
-
-  //페이지 첫 렌더링 시 window에 스크롤 이벤트로 등록될 함수
-  const scrollHeaderEvent = () => {
-    if (throttle) return;
-    setThrottle(true);
-    setTimeout(() => {
-      headerBorderBFunction(window.scrollY);
-      headerDisappearFunction(window.scrollY);
-      setThrottle(false);
-    }, 100);
-  };
+  const [lastScrollY, setLastScrollY] = useState(0);
+  const [scrollPosition, setScrollPosition] = useState(0);
 
   //스크롤 상태에 따라 헤더 border-bottom 상태 조작 함수
-  const headerBorderBFunction = (scY) => {
-    if (scY === 0) {
+  const headerBorderBFunction = () => {
+    if (scrollPosition === 0) {
       setHeaderBorderB(false);
     } else {
       setHeaderBorderB(true);
     }
   };
 
-  //스크롤 상태에 따라 헤더 보이는 상태 조작 함수
-  const headerDisappearFunction = (scY) => {
-    if (scY <= 210) {
-      setHeaderDisappear(false);
+  //스크롤이 내려가면 헤더가 내려오고 올라가면 헤더가 올라가게 하는 함수
+  const headerAppearFunction = () => {
+    if (scrollPosition <= 210) {
+      setHeaderAppear(true);
     } else {
-      setHeaderDisappear(true);
+      if (scrollPosition > lastScrollY) {
+        setHeaderAppear(false);
+      } else {
+        setHeaderAppear(true);
+      }
+    }
+  };
+
+  //스크롤 상태에 따라 서브헤더의 보이는 상태 조작 함수
+  const subHeaderAppearFunction = () => {
+    if (scrollPosition <= 210) {
+      // setHeaderAppear(true);
+      setSubHeaderAppear(false);
+    } else {
+      // setHeaderAppear(false);
+      setSubHeaderAppear(true);
     }
   };
 
   useEffect(() => {
-    window.addEventListener("scroll", scrollHeaderEvent);
-    return () => {
-      window.removeEventListener("scroll", scrollHeaderEvent);
+    const scrollEventHandler = () => {
+      setScrollPosition(window.scrollY);
     };
+    window.addEventListener("scroll", scrollEventHandler);
+    return () => window.removeEventListener("scroll", scrollEventHandler);
   }, []);
+
+  useEffect(() => {
+    if (throttle) return;
+    setThrottle(true);
+    let scY = window.scrollY;
+    setTimeout(() => {
+      headerBorderBFunction();
+      headerAppearFunction();
+      subHeaderAppearFunction();
+      setLastScrollY(scY);
+      setThrottle(false);
+    });
+  }, [scrollPosition]);
 
   return (
     <>
-      <Header
-        headerBorderB={headerBorderB}
-        headerDisappear={headerDisappear}
-      ></Header>
+      <div className="w-full h-24 fixed z-30">
+        <div
+          className={`w-full transition absolute ${
+            !headerAppear && "-top-24"
+          } ${headerBorderB && "border-b"}`}
+        >
+          <Header />
+        </div>
+      </div>
       <div className="w-100 px-14 pt-24">
         <div className="w-100 relative">
+        {subHeaderAppear && headerAppear && (
+          <div className="w-full h-20 bg-white fixed z-20 top-24 flex items-center border-b transition">
+            <img className="w-14" src={shipImg}></img>
+            <span className="text-2xl font-bold ml-2">문화</span>
+          </div>
+        )}
+        {subHeaderAppear && !headerAppear && (
+          <div className="w-full h-20 bg-white fixed z-20 top-0 flex items-center border-b transition">
+          <img className="w-14" src={shipImg}></img>
+          <span className="text-2xl font-bold ml-2">문화</span>
+        </div>
+        )}
           <div className="mt-32">
             <div className="flex items-center ml-2">
               <img className=" w-20" src={shipImg}></img>
