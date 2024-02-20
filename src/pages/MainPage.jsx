@@ -70,7 +70,7 @@ export default function MainPage() {
     <>
       <div className="w-full h-24 fixed z-30">
         <div
-          className={`w-full transition absolute ${
+          className={`w-full transition-all absolute ${
             !headerAppear && "-top-24"
           } ${headerBorderB && "border-b"}`}
         >
@@ -80,13 +80,13 @@ export default function MainPage() {
       <div className="w-100 px-14 pt-24">
         <div className="w-100 relative">
         {subHeaderAppear && headerAppear && (
-          <div className="w-full h-20 bg-white fixed z-20 top-24 flex items-center border-b transition">
+          <div className="w-full h-20 bg-white fixed z-20 flex items-center border-b transition-all top-24">
             <img className="w-14" src={shipImg}></img>
             <span className="text-2xl font-bold ml-2">문화</span>
           </div>
         )}
         {subHeaderAppear && !headerAppear && (
-          <div className="w-full h-20 bg-white fixed z-20 top-0 flex items-center border-b transition">
+          <div className="w-full h-20 bg-white fixed z-20 flex items-center border-b transition-all top-0">
           <img className="w-14" src={shipImg}></img>
           <span className="text-2xl font-bold ml-2">문화</span>
         </div>
