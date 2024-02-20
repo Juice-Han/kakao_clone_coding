@@ -3,9 +3,9 @@ import worldIcon from "../assets/icons/world.png";
 import searchIcon from "../assets/icons/search.png";
 import moonIcon from "../assets/icons/moon.png";
 
-export default function Header() {
+export default function Header(props) {
   return (
-    <div className=" bg-white w-full h-24 px-14 border-b fixed z-50">
+    <div className={`bg-white w-full h-24 px-14 fixed z-50 ${props.headerBorderB && 'border-b'} transition ${props.headerDisappear && '-translate-y-24'} duration-200`}>
       <div className="text-center">
         <div className="w-fit pt-[30px] float-left">
           <p className="text-3xl">kakao</p>

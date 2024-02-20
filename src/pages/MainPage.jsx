@@ -1,13 +1,56 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import shipImg from "../assets/kakao_ship.png";
 import arrowUpImg from "../assets/icons/arrow-up-solid.svg";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 
 export default function MainPage() {
+  const [headerBorderB, setHeaderBorderB] = useState(false);
+  const [headerDisappear, setHeaderDisappear] = useState(false);
+  const [throttle, setThrottle] = useState(false);
+
+  //페이지 첫 렌더링 시 window에 스크롤 이벤트로 등록될 함수
+  const scrollHeaderEvent = () => {
+    if (throttle) return;
+    setThrottle(true);
+    setTimeout(() => {
+      headerBorderBFunction(window.scrollY);
+      headerDisappearFunction(window.scrollY);
+      setThrottle(false);
+    }, 100);
+  };
+
+  //스크롤 상태에 따라 헤더 border-bottom 상태 조작 함수
+  const headerBorderBFunction = (scY) => {
+    if (scY === 0) {
+      setHeaderBorderB(false);
+    } else {
+      setHeaderBorderB(true);
+    }
+  };
+
+  //스크롤 상태에 따라 헤더 보이는 상태 조작 함수
+  const headerDisappearFunction = (scY) => {
+    if (scY <= 210) {
+      setHeaderDisappear(false);
+    } else {
+      setHeaderDisappear(true);
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener("scroll", scrollHeaderEvent);
+    return () => {
+      window.removeEventListener("scroll", scrollHeaderEvent);
+    };
+  }, []);
+
   return (
     <>
-      <Header></Header>
+      <Header
+        headerBorderB={headerBorderB}
+        headerDisappear={headerDisappear}
+      ></Header>
       <div className="w-100 px-14 pt-24">
         <div className="w-100 relative">
           <div className="mt-32">
